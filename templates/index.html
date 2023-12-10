@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Fastfood and Summary</title>
+    <script>
+        function calculateTotal() {
+            // 각 항목의 가격을 가져옵니다.
+            var burgerPrice = parseFloat(document.getElementById("burger").value);
+            var sidePrice = parseFloat(document.getElementById("side").value);
+            var drinkPrice = parseFloat(document.getElementById("drink").value);
+
+            // 총액을 계산합니다.
+            var total = burgerPrice + sidePrice + drinkPrice;
+
+            // 결과를 표시합니다.
+            document.getElementById("totalPrice").innerText = "Total Price: " + total.toFixed(2) + " $";
+        }
+    </script>
+</head>
+<body>
+    <h2>Order Your Meal</h2>
+    <form>
+        <label for="burger">Burger ($):</label>
+        <input type="number" id="burger" value="0" min="0" step="0.01" onchange="calculateTotal()"><br><br>
+
+        <label for="side">Side ($):</label>
+        <input type="number" id="side" value="0" min="0" step="0.01" onchange="calculateTotal()"><br><br>
+
+        <label for="drink">Drink ($):</label>
+        <input type="number" id="drink" value="0" min="0" step="0.01" onchange="calculateTotal()"><br><br>
+    </form>
+
+    <h3 id="totalPrice">Total Price: 0.00 $</h3>
+</body>
+</html>
