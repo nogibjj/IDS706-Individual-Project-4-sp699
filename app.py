@@ -1,22 +1,24 @@
-from flask import Flask, request, render_template
-import openai
+from flask import Flask, render_template, request
+from transformers import pipeline
 
 app = Flask(__name__)
 
-openai.api_key = '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'  # OpenAI API Key
+# Set up the sentiment analysis pipeline
+sentiment_analyzer = pipeline("sentiment-analysis")
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/")
 def index():
-    if request.method == 'POST':
-        user_input = request.form['user_input']
-        response = openai.Completion.create(
-          engine="davinci",
-          prompt=user_input,
-          max_tokens=150
-        )
-        answer = response.choices[0].text.strip()
-        return render_template('index.html', user_input=user_input, answer=answer)
-    return render_template('index.html', user_input='', answer='')
+    return render_template("sentiment_input.html")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    if request.method == "POST":
+        user_input = request.form["text_to_analyze"]
+
+        # Perform sentiment analysis on the user input
+        sentiment_result = sentiment_analyzer(user_input)
+
+        return render_template("sentiment_result.html", user_text=user_input, sentiment=sentiment_result[0]['label'])
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)
