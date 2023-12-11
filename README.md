@@ -187,3 +187,11 @@ if __name__ == "__main__":
 
 #### `Section 3` Azure Web App
 ##### Deploy container via Azure Web App to a public endpoint.
+[Sentiment Analysis](proj-4.azurewebsites.net)
+
+
+![image](https://github.com/nogibjj/IDS706-Individual-Project-4-sp699/assets/143478016/5701ba41-fe7d-43fb-93c4-53bf5c12010a)
+
+#### `Sectioni 4` Demo Video
+This video provides a clear, concise (2-5 minute) walkthrough and demonstration of the application. The link is provided below:
+[Link will be here]()
