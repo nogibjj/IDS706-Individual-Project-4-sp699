@@ -30,18 +30,160 @@
 
 
 ## :ballot_box_with_check: Main Progress
-#### `Section 1` Rust Source Code with SQLite Database
-##### Create Rust source code to perform CRUD operations on an SQLite database.
-* `lib.rs`
-  - __extract__: Read the CSV file using the file's link.
-  - __transform__: Convert the CSV data to a format suitable for the database.
-  - __create__: Insert data into the database.
-  - __read__:  Retrieve all entries from the database.
-  - __update__: Modify existing entries in the database.
-  - __delete__: Remove specific entries from the database.
-* `main.rs`
-  - Extract the CSV file, convert it to a database file, and then perform CRUD operations using it.
-* `test.rs`
-  - Test all the functions in 'lib.rs' and verify that the operations execute correctly.
+#### `Section 1` Flask App
+##### Build the Flask Application using Docker with functionality embedded LLM within Flask.
+* `sentiment_input.html`
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            height: 100px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Sentiment Analysis</h2>
+        <form action="/analyze" method="post">
+            <label for="text_to_analyze">Enter text for sentiment analysis:</label>
+            <textarea id="text_to_analyze" name="text_to_analyze" required></textarea>
+            <button type="submit">Analyze Sentiment</button>
+        </form>
+    </div>
+</body>
+</html>
+```
+* `sentiment_result.html`
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Analysis Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 60%;
+            max-width: 800px;
+        }
+        .result {
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Sentiment Analysis Result</h2>
+        <div class="result">
+            <h3>Your Text:</h3>
+            <p>{{ user_text }}</p>
+        </div>
+        <div class="result">
+            <h3>Analyzed Sentiment:</h3>
+            <p>{{ sentiment }}</p>
+        </div>
+        <a href="/">Try Another Analysis</a>
+    </div>
+</body>
+</html>
+```
+* `app.py`
+```Python
+from flask import Flask, render_template, request
+from transformers import pipeline
+
+app = Flask(__name__)
+
+# Set up the sentiment analysis pipeline
+sentiment_analyzer = pipeline("sentiment-analysis")
+
+@app.route("/")
+def index():
+    return render_template("sentiment_input.html")
+
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    if request.method == "POST":
+        user_input = request.form["text_to_analyze"]
+
+        # Perform sentiment analysis on the user input
+        sentiment_result = sentiment_analyzer(user_input)
+
+        return render_template("sentiment_result.html", user_text=user_input, sentiment=sentiment_result[0]['label'])
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)
+```
  
-#### `Section 2` Install Dependencies
+#### `Section 2` Docker Hub
+##### Host functioning container on DockerHub.
+* `Step 1` Docker Build </br>
+![image](https://github.com/nogibjj/IDS706-Mini-Project-1-sp699/assets/143478016/17113faf-897e-4bbd-9553-58c26860122e)
+
+* `Step 2` Docker Tag </br>
+![image](https://github.com/nogibjj/IDS706-Mini-Project-1-sp699/assets/143478016/564b8eba-6be5-40c2-8acb-9fdf23834e3c)
+
+* `Step 3` Docker Push </br>
+![image](https://github.com/nogibjj/IDS706-Mini-Project-1-sp699/assets/143478016/5e21094b-7403-4329-98dc-7f0feb2774db)
+
+* `Step 4` Confirm the successful push of the Docker image by checking if it is listed in Docker Hub repository </br>
+![image](https://github.com/nogibjj/IDS706-Mini-Project-1-sp699/assets/143478016/c63c9a23-ca80-4760-95a8-0d6efae2409f)
+
+
+#### `Section 3` Azure Web App
+##### Deploy container via Azure Web App to a public endpoint.
